@@ -9,122 +9,115 @@ app = create_app()
 
 
 @dataclass
-class FakeFilm:
-    title = 'Fake Film'
-    distributed_by = 'Fake'
-    release_date = '2002-12-03'
-    description = 'Fake description'
-    length = 100
-    rating = 8.0
+class FakeActor:
+    name = 'Fake Name'
+    birthday = '2002-12-03'
+    is_active = False
 
 
-class TestFilms:
-    uuid = []
+class TestActors:
+    id = []
 
-    def test_get_films_with_db(self):
+    def test_get_actors_with_db(self):
         client = app.test_client()
-        resp = client.get('/films')
+        resp = client.get('/actors')
 
         assert resp.status_code == http.HTTPStatus.OK
 
-    @patch('src.services.film_service.FilmService.fetch_all_films', autospec=True)
-    def test_films_mock_db(self, mock_db_call):
+    @patch('src.services.actor_service.ActorService.fetch_all_actors', autospec=True)
+    def test_actors_mock_db(self, mock_db_call):
         client = app.test_client()
-        resp = client.get('/films')
+        resp = client.get('/actors')
         mock_db_call.assert_called_once()
         assert resp.status_code == http.HTTPStatus.OK
         assert len(resp.json) == 0
 
-    def test_create_film_with_db(self):
+    def test_create_actor_with_db(self):
         client = app.test_client()
         data = {
-            'title': 'Test Title',
-            'distributed_by': 'Test Company',
-            'release_date': '2010-04-01',
-            'description': '',
-            'length': 100,
-            'rating': 8.0
+            'name': 'Sake Name',
+            'birthday': '2002-12-03',
+            'is_active': True
         }
-        resp = client.post('/films', data=json.dumps(data), content_type='application/json')
+        resp = client.post('/actors', data=json.dumps(data), content_type='application/json')
         assert resp.status_code == http.HTTPStatus.CREATED
-        assert resp.json['title'] == 'Test Title'
-        self.uuid.append(resp.json['uuid'])
+        assert resp.json['name'] == 'Sake Name'
+        self.id.append(resp.json['id'])
 
-    def test_create_film_with_mock_db(self):
+    def test_create_actor_with_mock_db(self):
         with patch('src.database.models.db.session.add', autospec=True) as mock_session_add, \
                 patch('src.database.models.db.session.commit', autospec=True) as mock_session_commit:
             client = app.test_client()
             data = {
-                'title': 'Test Title',
-                'distributed_by': 'Test Company',
-                'release_date': '2010-04-01',
-                'description': '',
-                'length': 100,
-                'rating': 8.0
+                'name': 'Test Name',
+                'birthday': '2002-12-03',
+                'is_active': True
             }
-            resp = client.post('/films', data=json.dumps(data), content_type='application/json')
+            resp = client.post('/actors', data=json.dumps(data), content_type='application/json')
             mock_session_add.assert_called_once()
             mock_session_commit.assert_called_once()
 
     def test_update_film_with_db(self):
-        uuid = '749d5ebb-50ca-4719-9827-66b2efffd247'
+        id = '9'
         client = app.test_client()
-        url = f'/films/{uuid}'
+        url = f'/actors/{id}'
 
         data = {
-            'title': 'Update Title',
-            'distributed_by': 'update',
-            'release_date': '2010-04-01'
+            'name': 'Test Name',
+            'birthday': '2002-12-03',
+            'is_active': False
         }
         resp = client.put(url, data=json.dumps(data), content_type='application/json')
         assert resp.status_code == http.HTTPStatus.OK
-        assert resp.json['title'] == 'Update Title'
+        assert resp.json['is_active'] == False
 
     def test_update_film_with_mock_db(self):
-        with patch('src.services.film_service.FilmService.fetch_film_by_uuid') as mocked_query, \
+        with patch('src.services.actor_service.ActorService.fetch_actor_by_id') as mocked_query, \
                 patch('src.database.models.db.session.add', autospec=True) as mock_session_add, \
                 patch('src.database.models.db.session.commit', autospec=True) as mock_session_commit:
-            mocked_query.return_value = FakeFilm()
+            mocked_query.return_value = FakeActor()
             client = app.test_client()
-            url = f'/films/1'
+            url = f'/actors/1'
             data = {
-                'title': 'Update Title',
-                'distributed_by': 'update',
-                'release_date': '2010-04-01'
+                'name': 'Test Name',
+                'birthday': '2002-12-03',
+                'is_active': False
             }
             resp = client.put(url, data=json.dumps(data), content_type='application/json')
             mock_session_add.assert_called_once()
             mock_session_commit.assert_called_once()
 
-    def test_patch_film_with_db(self):
-        uuid = 'b58d741c-1c14-4d6d-98db-7ce4e4f31d1b'
+
+    def test_patch_actor_with_db(self):
+        id = '2'
         client = app.test_client()
-        url = f'/films/{uuid}'
+        url = f'/actors/{id}'
 
         data = {
-            'title': 'Title'
+            'name': 'Name'
         }
         resp = client.patch(url, data=json.dumps(data), content_type='application/json')
         assert resp.status_code == http.HTTPStatus.OK
-        assert resp.json['title'] == 'Title'
+        assert resp.json['name'] == 'Name'
 
-    def test_patch_film_with_mock_db(self):
-        with patch('src.services.film_service.FilmService.fetch_film_by_uuid') as mocked_query, \
+
+    def test_patch_actor_with_mock_db(self):
+        with patch('src.services.actor_service.ActorService.fetch_actor_by_id') as mocked_query, \
                 patch('src.database.models.db.session.add', autospec=True) as mock_session_add, \
                 patch('src.database.models.db.session.commit', autospec=True) as mock_session_commit:
-            mocked_query.return_value = FakeFilm()
+            mocked_query.return_value = FakeActor()
             client = app.test_client()
-            url = f'/films/1'
+            url = f'/actors/1'
             data = {
-                'title': 'Update Title'
+                'name': 'Update Name'
             }
             resp = client.patch(url, data=json.dumps(data), content_type='application/json')
             mock_session_add.assert_called_once()
             mock_session_commit.assert_called_once()
 
-    def test_delete_film_with_db(self):
-        uuid = '749d5ebb-50ca-4719-9827-66b2efffd247'
+    def test_delete_actor_with_db(self):
+        id = '10'
         client = app.test_client()
-        url = f'/films/{uuid}'
+        url = f'/actors/{id}'
         resp = client.delete(url)
         assert resp.status_code == http.HTTPStatus.NO_CONTENT

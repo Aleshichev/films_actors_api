@@ -46,35 +46,41 @@ class FilmListApi(Resource):
         return self.film_schema.dump(film), 200
 
     def patch(self, uuid):
-        film = db.session.query(Film).filter_by(uuid=uuid).first()
+        film = FilmService.fetch_film_by_uuid(db.session, uuid)
+
+        # film = db.session.query(Film).filter_by(uuid=uuid).first()
         if not film:
             return "", 404
+        film = self.film_schema.load(request.json, instance=film, session=db.session, partial=True)
 
-        film_json = request.json
-        title = film_json.get('title')
-        distributed_by = film_json.get('distributed_by')
-        rating = film_json.get('rating')
-        length = film_json.get('length')
-        description = film_json.get('description')
-        release_date = datetime.strptime(film_json.get('release_date'), '%Y-%m-%d') if film_json.get(
-            'release_date') else None
-
-        if title:
-            film.title = title
-        elif release_date:
-            film.release_date = release_date
-        elif distributed_by:
-            film.distributed_by = distributed_by
-        elif rating:
-            film.rating = rating
-        elif length:
-            film.length = length
-        elif description:
-            film.description = description
+        # film_json = request.json
+        # title = film_json.get('title')
+        # distributed_by = film_json.get('distributed_by')
+        # rating = film_json.get('rating')
+        # length = film_json.get('length')
+        # description = film_json.get('description')
+        # release_date = datetime.strptime(film_json.get('release_date'), '%Y-%m-%d') if film_json.get(
+        #     'release_date') else None
+        #
+        # if title:
+        #     film.title = title
+        # elif release_date:
+        #     film.release_date = release_date
+        # elif distributed_by:
+        #     film.distributed_by = distributed_by
+        # elif rating:
+        #     film.rating = rating
+        # elif length:
+        #     film.length = length
+        # elif description:
+        #     film.description = description
+        #
 
         db.session.add(film)
         db.session.commit()
-        return {'message': 'Updated successfully'}, 200
+        return self.film_schema.dump(film), 200
+
+        # return {'message': 'Updated successfully'}, 200
 
     def delete(self, uuid):
         film = FilmService.fetch_film_by_uuid(db.session, uuid)
