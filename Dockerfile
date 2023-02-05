@@ -7,9 +7,9 @@ RUN pip install -U pipenv
 COPY Pipfile .
 COPY Pipfile.lock .
 RUN PIPENV_VENV_IN_PROJECT=1 pipenv install --deploy --system
-COPY ./ .
+COPY . .
 RUN chown -R userapi:userapi ./
 USER userapi
 
 EXPOSE 5000
-CMD ["python", "./wsgi.py"]
+CMD ["python", "wsgi.py"]

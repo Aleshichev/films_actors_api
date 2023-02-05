@@ -52,6 +52,7 @@ class AuthLogin(Resource):
             }
         )
 
+
 def token_required(func):
     @wraps(func)
     def wrapper(self, *args, **kwargs):
@@ -59,7 +60,7 @@ def token_required(func):
         if not token:
             return "", 401, {'WWW-Authenticate': "Basic realm='Authentication required'"}
         try:
-            uuid = jwt.decode(token, create_app().config["SECRET_KEY"])['user_id']
+            uuid = jwt.decode(token, create_app().config["SECRET_KEY"], algorithms=['HS256'])['user_id']
         except (KeyError, jwt.ExpiredSignatureError):
             return "", 401, {'WWW-Authenticate': "Basic realm='Authentication required'"}
         user = User.find_user_by_uuid(uuid)
@@ -67,4 +68,5 @@ def token_required(func):
         if not user:
             return "", 401, {'WWW-Authenticate': "Basic realm='Authentication required'"}
         return func(self, *args, **kwargs)
+
     return wrapper
