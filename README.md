@@ -4,17 +4,10 @@
 ### This is a simple application can insert/select/update/delete data in the database using sqlalchemy and flask rest framework.
 ### Docker https://hub.docker.com/r/aleshichev/films_api
 
-## Command-line interface:
-
-To automatically generate and add new data use these commands
-### $ flask user
- - **add_data_courses**
- - **add_data_group**
- - **add_data_student**
- - **mix_student_courses**
 
 
-## Database has 3 tables:
+
+## Database has 4 tables:
 
 - **Actors**
 - **Films**
