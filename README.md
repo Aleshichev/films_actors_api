@@ -4,9 +4,6 @@
 ### This is a simple application can insert/select/update/delete data in the database using sqlalchemy and flask rest framework.
 ### Docker https://hub.docker.com/r/aleshichev/films_api
 
-
-
-
 ## Database has 4 tables:
 
 - **Actors**
@@ -14,15 +11,28 @@
 - **Movies-actors**
 - **Users**
 
+## Swagger:
+- **/swagger** - users can interactively view the project documentation.
+
 ## The application accepts the following requests:
 
-- **/api/v1/group** - all groups with numbers of students. **GET** method has an optional parameter "number_of_students", it returns groups less than or equal to parameter's value. In the **POST** method and **DELETE** method you can add new group or remove existing group.
+- **/register** - To register a new user you need to enter your username and password and get a token, then create a new user with json data.
 
-- **/api/v1/students** - all students with their group and list of courses. **GET** method has an optional parameter "id", it returns all students who has this parameter's value in their list of courses. In the **POST** method and **DELETE** method you can add new student or remove existing student.In the **PUT** method you can change an existing student.
+- **/login** - Enter your login to sign in (igor 123).
 
-- **/api/v1/students/course** - all courses with their description and list of students who are enrolled in this course. Using the **POST** method you can enroll a student in a course and using the **DELETE** method you can remove a student from the course.
+- **/films** - list of all films.
 
-## Unittests :
-- **test_generate_data.py** - checks automatic data generation.
-- **test_sql.py** - validates the completion of data in the database .
-- **test_api.py** - checks feedback api.
+-**/films/uuid** -  **GET** method has an optional parameter "uuid", it returns films equal to parameter's value. In the **POST** method and **DELETE** method you can add new film or remove existing film. In the **PUT** and **PATCH** methods you can change an existing film.
+
+- **/actors** - list of all actors.
+
+- **/actors/id** - **GET** method has an optional parameter "id", it returns actor who has this parameter's value . In the **POST** method and **DELETE** method you can add new actor or remove existing actor. In the **PUT** and **PATCH** methods you can change an existing actor.
+
+- **/aggregations** - this page shows: films_count, 'max': max_rating, 'min': min_rating, 'avg': avg_rating, 'sum': sum_rating
+
+- **/smoke** - api test  page
+
+## Pytests :
+- **test_actors.py** - checks response api.
+- **test_films.py** - checks feeresponse api.
+- **test_smoke.py** - checks response api.
