@@ -22,7 +22,7 @@
 
 - **/films** - list of all films.
 
--**/films/uuid** -  **GET** method has an optional parameter "uuid", it returns films equal to parameter's value. In the **POST** method and **DELETE** method you can add new film or remove existing film. In the **PUT** and **PATCH** methods you can change an existing film.
+- **/films/uuid** -  **GET** method has an optional parameter "uuid", it returns films equal to parameter's value. In the **POST** method and **DELETE** method you can add new film or remove existing film. In the **PUT** and **PATCH** methods you can change an existing film.
 
 - **/actors** - list of all actors.
 
